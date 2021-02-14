@@ -1,0 +1,1 @@
+"D:\Python3.7\python.exe" "C:\Users\ringk\OneDrive\Documents\Sublime Files\AI in general (From the book or not)\Learning Off of Website (Andrew's Links)\Kernel Machines\WebsiteReadingStocksData\Personal Trading App\closeAllPositions.py"
