@@ -39,6 +39,7 @@ MANUAL EXECUTION:
 6. Run closePositions to close your positions
 
 
+
 Task Scheduler OR cronjob to AUTOMATICALLY run the scripts (going to say auto run to refer to this). Used bat files for task scheduler
 M-F = Monday through Friday
 
