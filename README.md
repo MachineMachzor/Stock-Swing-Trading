@@ -7,7 +7,7 @@ Screener: Finviz
 1. Stock selection: https://ibb.co/DD86CXx AND https://ibb.co/vdttkQL   (Grabs ~180 stocks for further evaluation specified below)
 
 
-Within script checks (Note:
+Within script checks
 2. Currently above 200ema in the CURRENT day.
 3. Positive LINEAR REGRESSED slope from 30 days ago
 4. Macd crossover upward
