@@ -23,6 +23,7 @@ Note: Not buying a macd crossover with a PERCENT CHANGE on the CURRENT BAR >= 15
 
 
 
+
 REGARDING RUNNING THE APPLICATION:
 {
 
