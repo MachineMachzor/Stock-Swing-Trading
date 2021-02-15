@@ -3,7 +3,7 @@
 STRATEGY (subject to review):
 
 Screener: Finviz
-- Stock selection: https://ibb.co/DD86CXx AND https://ibb.co/vdttkQL   (Grabs ~180 stocks for further evaluation specified below)
+- Stock selection: https://ibb.co/DD86CXx AND https://ibb.co/vdttkQL   (Grabs ~180 stocks for evaluation, usually buys 20)
 
 
 Within script checks:
