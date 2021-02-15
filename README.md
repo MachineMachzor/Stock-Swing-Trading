@@ -51,7 +51,7 @@ M-F = Monday through Friday
 AUTOMATIC EXECUTION (make sure you did steps 1-3 in normal steps):
 1. Set insertTrendingFibvizStocks2 to run M-F at 3:41pm (grabs stocks)
 2. Set closePositions to run on Tuesday & Thursday at 3:45pm (Days subject to change) (closes positions).
-3. Set macdEmaTrend (called priceActionEma.bat) to run at 3:51pm M-F (reviews grabbed stocks & buys some).
+3. Set macdEmaTrend (called priceActionEma.bat) to run at 3:51pm M-F (reviews grabbed stocks and buys some).
 
 
 
