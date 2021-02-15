@@ -49,9 +49,9 @@ Task Scheduler OR cronjob to AUTOMATICALLY run the scripts (going to say auto ru
 M-F = Monday through Friday
 
 AUTOMATIC EXECUTION (make sure you did steps 1-3 in normal steps):
-1. Set insertTrendingFibvizStocks2 to run M-F at 3:41pm
-2. Set closePositions to run on Tuesday & Thursday at 3:45pm (Subject to change)
-3. Set macdEmaTrend (called priceActionEma.bat) to run at 3:51pm M-F.
+1. Set insertTrendingFibvizStocks2 to run M-F at 3:41pm (grabs stocks)
+2. Set closePositions to run on Tuesday & Thursday at 3:45pm (Days subject to change) (closes positions).
+3. Set macdEmaTrend (called priceActionEma.bat) to run at 3:51pm M-F (reviews grabbed stocks & buys some).
 
 
 
