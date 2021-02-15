@@ -34,7 +34,7 @@ MANUAL EXECUTION:
 2. Run initializeDatabase1
 3. Run insertStocks2
 4. Run insertTrendingFibvizStocks2 stocks
-5. Run macdEmaTrend (go to Inputs and configure it. Ignore pdtRule it's swing trading)
+5. Run macdEmaTrend
 6. Run closePositions to close your positions
 
 
