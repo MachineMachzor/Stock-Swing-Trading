@@ -8,7 +8,7 @@ Screener: Finviz
 
 Within script checks:
 - Currently above 200ema in the CURRENT day.
-- Positive LINEAR REGRESSED slope from 30 days ago
+- Positive LINEAR REGRESSED slope from 30days ago to today
 - Macd crossover upward
 
 
@@ -38,6 +38,12 @@ MANUAL EXECUTION:
 6. Run closePositions to close your positions
 
 
+}
+
+
+
+
+WHEN THE SCRIPT IS BEING RUNNED
 
 Task Scheduler OR cronjob to AUTOMATICALLY run the scripts (going to say auto run to refer to this). Used bat files for task scheduler
 M-F = Monday through Friday
@@ -48,7 +54,7 @@ AUTOMATIC EXECUTION (make sure you did steps 1-3 in normal steps):
 3. Set macdEmaTrend (called priceActionEma.bat) to run at 3:51pm M-F.
 
 
-}
+
 
 
 
