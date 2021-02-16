@@ -558,6 +558,9 @@ allMarketOrders = [order for order in allMarketOrders if order.type=='market' an
 # symbols = ['AA', 'AAOI', 'ABEQ', 'ACIO', 'ACV', 'ACST', 'ACWI', 'AES', 'AEMD', 'ADUS', 'AHH', 'AIR']
 # symbols = ['IRM']
 
+from collections import OrderedDict
+symbols = list(OrderedDict.fromkeys(symbols)) #Remove duplicates & keep list order https://www.geeksforgeeks.org/python-ways-to-remove-duplicates-from-list/
+
 for symbol in symbols:
     #CLB, TSLA, UAA
     data_market_hours = pd.DataFrame() #Reset the data for each symbol
