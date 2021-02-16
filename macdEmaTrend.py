@@ -47,12 +47,12 @@ context = ssl.create_default_context() #Default context for emails
 ###############################################################
 risk = 1
 reward = 1.5
-pdtRule = 3 #Amount of trades before we cant daytrade (buy & sell on same day, normally 3)
+# pdtRule = 3 #Amount of trades before we cant daytrade (buy & sell on same day, normally 3)
 actuallyTrade = True #If we should actually trade
 shouldBacktest = False #True/False depending on if we need past data to backtest
 trendingAboveEmaMonthlyPercentage = 0.60 #This X percentage above ema200 over the last month
 tooBigAMove = 15 #EH's last candle was 19.374796 percent, but HUYA did really well and had a percent of 11.191047, so we'll do 15% (just brainless thinking amirite?)
-
+qtyToBuy = 2
 ###############################################################
 
 
@@ -123,7 +123,7 @@ symbols = [] #start symbols list
 
 
 # Add a couple of good stocks here to always look at
-symbolsExtend = ['FLGT', 'API']
+symbolsExtend = ['RIOT', 'FLGT', 'API', 'PINS']
 
 for symbol in symbolsExtend:
     if symbol not in symbols:
@@ -448,6 +448,8 @@ def stackDataIntraday(inputDf, iteratorDate, time, frequency):
 
 
 def buyOrSellStock(symbol, buyOrSell, take_profit, stop_loss, actuallyTrade):
+    global qtyToBuy #tells us how much of a symbol to buy
+
     if actuallyTrade == False:
         return #Just dont trade if it's false
 
@@ -467,7 +469,7 @@ def buyOrSellStock(symbol, buyOrSell, take_profit, stop_loss, actuallyTrade):
             symbol=symbol,  
             side=buyOrSell, #buy or sell
             type='market', #Just going to ensure the buying price for the quantity so there's no issues with balance
-            qty=2,  #int(calculate_quantity(data_market_hours.close.values[-1])),  #We're going to use 95% of our bp for every purchase (check the function for clarification)
+            qty=qtyToBuy,  #int(calculate_quantity(data_market_hours.close.values[-1])),  #We're going to use 95% of our bp for every purchase (check the function for clarification)
             time_in_force='gtc',
             order_class='bracket',
             stop_loss={'stop_price': stop_loss},
@@ -1186,12 +1188,13 @@ for symbol in symbols:
 
             generalSlope = []
             # print(len(data_market_hours))
+            
             #Gets the slope for the last 30 days
             for i in range(len(data_market_hours)):
                 if i >= daysInPastGT:
-                    generalSlope.append(tulipy.linregslope(data_market_hours['close'][i+1-daysInPastGT:i+1].values, daysInPastGT)[0])
+                    generalSlope.append(tulipy.linregslope(data_market_hours['close'][i+1-daysInPastGT:i+1].values, daysInPastGT)[0]) #Just appends 1 slope when the previous days are enough
                 else:
-                    generalSlope.append(None)
+                    generalSlope.append(None) 
 
             data_market_hours['generalSlope'] = generalSlope
             # print(linregslope)
@@ -1209,12 +1212,15 @@ for symbol in symbols:
                 belowEma = 0
                 allChecks = 0
                 # if data_market_hours['close'][i]
-                for j in range(startingVal, i):
+                for j in range(startingVal+1, i+1):
                     if data_market_hours['close'][j] - data_market_hours['ema200'][j] > 0: #A close price above the ema200
                         aboveEma += 1
                     elif data_market_hours['close'][j] - data_market_hours['ema200'][j] < 0:
                         belowEma += 1
                     allChecks += 1 #Everytime we check a point
+                    # print(j)
+                    # print(data_market_hours['close'][j])
+
 
                 #If it's 80% above the ema200
                 if (aboveEma/allChecks) > 0.80:
@@ -1223,22 +1229,15 @@ for symbol in symbols:
                     trendingAboveEmaDay.append(negDir)
                 else:
                     trendingAboveEmaDay.append(neutral)
+
+            # print(data_market_hours)
             
             data_market_hours['trendingAboveEma'] = trendingAboveEmaDay
 
-
-            percentChange = talib.ROC(data_market_hours['close'].values, 1)
-            # print(percentChange)
-            # print(type(percentChange))
-            # print(len(percentChange))
-            # print(len(data_market_hours))
-            # sys.exit(1)
+            #FAILED PERCENT CHANGE
+            # percentChange = talib.ROC(data_market_hours['close'].values, 1) -> this doesn't work
             # percentChange = numpy.insert(percentChange, 0, None, axis=0)
-
-            data_market_hours['percentChange'] = percentChange 
-            # print(data_market_hours) 
-
-            # sys.exit(1)
+            # data_market_hours['percentChange'] = percentChange 
 
 
         
@@ -1503,19 +1502,28 @@ for symbol in symbols:
             # sys.exit(1)
             # buyOrSellStock(symbol, 'buy', take_profit_buy, stop_loss_buy, actuallyTrade)
             # sys.exit(1)
-            if data_market_hours['buySellSignals'][-1] == posDir and symbol not in existing_order_symbols:
+
+            #Checks if it's a buy signal, if it's not a symbol that already exists in the orders, and if it's cost is less than our current balanace
+            if data_market_hours['buySellSignals'][-1] == posDir and symbol not in existing_order_symbols and data_market_hours['close'][-1] * qtyToBuy <= float(api.get_account().cash):
                 buyOrSellStock(symbol, 'buy', take_profit_buy, stop_loss_buy, actuallyTrade)
                 messages.append(f"BUY {symbol} {data_market_hours.index[-1]} MACD cross, trending up and above EMA \n")
                 print(f"BUY {symbol}")
 
             #selling
             ###############################################
-            # self.data.l.emasSameDir == -1
-            # if (data_market_hours['dojis'][-2] == 100 or data_market_hours['dojis'][-2] == -100 or data_market_hours['dojis'][-3] == 100 or data_market_hours['dojis'][-3] == -100) and data_market_hours['breakouts'][-1] == -100 and data_market_hours['aboveAvgVolume'][-1] == 1 and data_market_hours['emasSameDir'][-1] == -1:
-            if data_market_hours['buySellSignals'][-1] == negDir and symbol not in existing_order_symbols and symbol != 'TSLA':
+            if data_market_hours['buySellSignals'][-1] == negDir and symbol not in existing_order_symbols and symbol != 'TSLA' and data_market_hours['close'][-1] * qtyToBuy <= float(api.get_account().cash):
                 buyOrSellStock(symbol, 'sell', take_profit_sell, stop_loss_sell, actuallyTrade)
                 messages.append(f"SELL {symbol} {data_market_hours.index[-1]} MACD cross, trending down and below EMA \n")
                 print(f"SELL {symbol}")
+
+            # print(data_market_hours['close'][-1] * qtyToBuy <= float(api.get_account().cash))
+            # print(float(api.get_account().cash))
+            # print(data_market_hours['close'][-1] * qtyToBuy)
+
+            # buyOrSellStock(symbol, 'buy', take_profit_buy, stop_loss_buy, actuallyTrade)
+            # sys.exit(1)
+            # print(data_market_hours)
+            # sys.exit(1)
 
                 
             
